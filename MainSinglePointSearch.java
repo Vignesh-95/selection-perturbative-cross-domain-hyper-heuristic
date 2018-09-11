@@ -15,11 +15,11 @@ public class MainSinglePointSearch
         // Can change
         int seed = 1;
 
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < 1; i++)
         {
             spshh = new SinglePointSearchHyperHeuristic(1111, seed++);
             problem = new PersonnelScheduling(seed++);
-            problem.loadInstance(0);
+            problem.loadInstance(5);
             spshh.setTimeLimit(600000);
             spshh.loadProblemDomain(problem);
             spshh.run();

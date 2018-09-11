@@ -24,15 +24,22 @@ public class SinglePointSearchHyperHeuristic extends HyperHeuristic
         // Initialisation
         problemDomain.initialiseSolution(0);
         int totalHeuristics = problemDomain.getNumberOfHeuristics();
+        double utilityLowerBound = 0, utilityUpperBound = totalHeuristics * 3;
         double[] utility = new double[totalHeuristics];
+        double initialValue = utilityUpperBound * 0.65;
+        for (int counter = 0; counter < totalHeuristics; counter++)
+        {
+            utility[counter] = initialValue;
+        }
+
         int heuristicIndex;
-        double initialFitness, currentFitness=0.0, tempFitness, waterLevel=0.0;
+        double initialFitness=0.0, currentFitness=0.0, tempFitness;
 
         if (!hasTimeExpired())
         {
             initialFitness = problemDomain.getFunctionValue(0);
             currentFitness = initialFitness;
-            waterLevel = initialFitness;
+            System.out.println("Fitness: " + currentFitness);
         }
 
         while (!hasTimeExpired())
@@ -42,21 +49,51 @@ public class SinglePointSearchHyperHeuristic extends HyperHeuristic
            if (tempFitness < currentFitness)
            {
                utility[heuristicIndex] += 1;
+               if (utility[heuristicIndex] > utilityUpperBound)
+               {
+                   utility[heuristicIndex] = utilityUpperBound * 0.9;
+               }
+
                problemDomain.copySolution(1, 0);
                currentFitness = tempFitness;
            }
            else
            {
-               utility[heuristicIndex] /= 2;
-               if (tempFitness < waterLevel)
+               double elapsedTime = getElapsedTime();
+               double timeLimit = getTimeLimit();
+               System.out.println("Elapsed Time: " + elapsedTime + "\t\tTime Limit: " + timeLimit);
+               if (elapsedTime < 0.2 * timeLimit)
                {
-                   problemDomain.copySolution(1, 0);
-                   currentFitness = tempFitness;
+                   utility[heuristicIndex] -= 1;
+               }
+               else if (elapsedTime < 0.8 * timeLimit)
+               {
+                   utility[heuristicIndex] /= 2;
+               }
+               else
+               {
+                   utility[heuristicIndex] = Math.sqrt(utility[heuristicIndex]);
                }
 
-               waterLevel -= (waterLevel - optimalFitnessValue)/getElapsedTime();
+               if (utility[heuristicIndex] < utilityLowerBound)
+               {
+                   utility[heuristicIndex] = utilityLowerBound + utilityUpperBound * 0.1;
+               }
            }
+
+           double elapsedTime = getElapsedTime();
+           double timeLimit = getTimeLimit();
+           System.out.println("Fitness: " + currentFitness);
         }
+
+        System.out.print("Utility Values:\t[");
+        for (int count = 0; count < totalHeuristics; count++)
+        {
+            System.out.print(utility[count] + " ");
+        }
+        System.out.println("]");
+        System.out.println("Utility Upper Bound: " + utilityUpperBound +
+                "\t\tUtility Lower Bound: " + utilityUpperBound);
     }
 
     private int getIndexOfLargest(double[] array, int arrayLength)
