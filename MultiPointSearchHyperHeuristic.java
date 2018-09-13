@@ -10,6 +10,7 @@ public class MultiPointSearchHyperHeuristic extends HyperHeuristic
     double mutationProbability;
     ProblemDomain problemDomain;
     ArrayList<ArrayList<Integer>> population;
+    int work = 0;
 
     public MultiPointSearchHyperHeuristic(int seed, int pSize, int tSize, double mP)
     {
@@ -33,8 +34,8 @@ public class MultiPointSearchHyperHeuristic extends HyperHeuristic
     {
         this.problemDomain = problemDomain;
         heuristics_count = this.problemDomain.getNumberOfHeuristics();
-        minChromosomeLength = heuristics_count/2;
-        maxChromosomeLength = heuristics_count;
+        minChromosomeLength = 3;
+        maxChromosomeLength = 10;
         this.problemDomain.initialiseSolution(0);
         for (int counter = 0; counter < populationSize; counter++)
         {
@@ -54,12 +55,24 @@ public class MultiPointSearchHyperHeuristic extends HyperHeuristic
 
     public void evolve()
     {
-        while(!hasTimeExpired())
+        while(!hasTimeExpired() && work != 100)
         {
             int parents[] = new int[2];
             selectParents(parents);
             crossover(parents);
+            work++;
         }
+
+        System.out.println();
+        for (int counter = 0; counter < populationSize; counter++)
+        {
+            int chromosomeLength = population.get(counter).size();
+            for (int next = 0; next < chromosomeLength; next++)
+            {
+                System.out.print(population.get(counter).get(next) + " ");
+            }
+        }
+        System.out.println();
     }
 
     public double evaluate_heuristic(ArrayList<Integer> chromosome)
@@ -73,13 +86,13 @@ public class MultiPointSearchHyperHeuristic extends HyperHeuristic
             tempFitness = problemDomain.applyHeuristic(chromosome.get(counter), 0, 1);
             while (tempFitness < currentFitness)
             {
+                work = 0;
                 problemDomain.copySolution(1,0);
                 currentFitness = tempFitness;
                 hasTimeExpired();
                 tempFitness = problemDomain.applyHeuristic(chromosome.get(counter), 0, 1);
             }
         }
-
         return currentFitness-startFitness;
     }
 

@@ -5,13 +5,10 @@ import java.util.ArrayList;
 
 public class SinglePointSearchHyperHeuristic extends HyperHeuristic
 {
-    public SinglePointSearchHyperHeuristic(double opFitness, long seed)
+    public SinglePointSearchHyperHeuristic(long seed)
     {
         super(seed);
-        optimalFitnessValue = opFitness;
     }
-    
-    private double optimalFitnessValue;
     
     public String toString()
     {
@@ -33,21 +30,23 @@ public class SinglePointSearchHyperHeuristic extends HyperHeuristic
         }
 
         int heuristicIndex;
-        double initialFitness=0.0, currentFitness=0.0, tempFitness;
+        double initialFitness, currentFitness=0.0, tempFitness;
+        int noChange = 0;
 
         if (!hasTimeExpired())
         {
             initialFitness = problemDomain.getFunctionValue(0);
             currentFitness = initialFitness;
-            System.out.println("Fitness: " + currentFitness);
+            // System.out.println("Fitness: " + currentFitness);
         }
 
-        while (!hasTimeExpired())
+        while (!hasTimeExpired() && noChange != 200)
         {
            heuristicIndex = getIndexOfLargest(utility, totalHeuristics);
            tempFitness = problemDomain.applyHeuristic(heuristicIndex, 0, 1);
            if (tempFitness < currentFitness)
            {
+               noChange = 0;
                utility[heuristicIndex] += 1;
                if (utility[heuristicIndex] > utilityUpperBound)
                {
@@ -59,9 +58,10 @@ public class SinglePointSearchHyperHeuristic extends HyperHeuristic
            }
            else
            {
+               noChange++;
                double elapsedTime = getElapsedTime();
                double timeLimit = getTimeLimit();
-               System.out.println("Elapsed Time: " + elapsedTime + "\t\tTime Limit: " + timeLimit);
+               // System.out.println("Elapsed Time: " + elapsedTime + "\t\tTime Limit: " + timeLimit);
                if (elapsedTime < 0.2 * timeLimit)
                {
                    utility[heuristicIndex] -= 1;
@@ -80,10 +80,7 @@ public class SinglePointSearchHyperHeuristic extends HyperHeuristic
                    utility[heuristicIndex] = utilityLowerBound + utilityUpperBound * 0.1;
                }
            }
-
-           double elapsedTime = getElapsedTime();
-           double timeLimit = getTimeLimit();
-           System.out.println("Fitness: " + currentFitness);
+           // System.out.println("Fitness: " + currentFitness);
         }
 
         System.out.print("Utility Values:\t[");
@@ -93,7 +90,7 @@ public class SinglePointSearchHyperHeuristic extends HyperHeuristic
         }
         System.out.println("]");
         System.out.println("Utility Upper Bound: " + utilityUpperBound +
-                "\t\tUtility Lower Bound: " + utilityUpperBound);
+                "\t\tUtility Lower Bound: " + utilityLowerBound);
     }
 
     private int getIndexOfLargest(double[] array, int arrayLength)

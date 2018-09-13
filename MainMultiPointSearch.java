@@ -1,6 +1,9 @@
 import AbstractClasses.HyperHeuristic;
 import AbstractClasses.ProblemDomain;
+import BinPacking.BinPacking;
+import FlowShop.FlowShop;
 import PersonnelScheduling.PersonnelScheduling;
+import SAT.SAT;
 
 public class MainMultiPointSearch
 {
@@ -10,13 +13,101 @@ public class MainMultiPointSearch
         ProblemDomain problem;
         // Can change
         int seed = 1;
+        double average = 0.0;
+        double best = Double.MAX_VALUE;
 
-        spshh = new MultiPointSearchHyperHeuristic(seed++, 30, 3, 0.3);
-        problem = new PersonnelScheduling(seed++);
-        problem.loadInstance(2);
-        spshh.setTimeLimit(100000);
-        spshh.loadProblemDomain(problem);
-        spshh.run();
-        System.out.println(spshh.getBestSolutionValue());
+        for (int i = 0; i < 30; i++)
+        {
+            spshh = new MultiPointSearchHyperHeuristic(seed++, 30, 5, 0.3);
+            problem = new PersonnelScheduling(seed++);
+            problem.loadInstance(5);
+            spshh.setTimeLimit(600000);
+            spshh.loadProblemDomain(problem);
+            spshh.run();
+            double current = spshh.getBestSolutionValue();
+            average += current;
+            if (current < best)
+            {
+                best = current;
+            }
+            System.out.println(spshh.getBestSolutionValue());
+        }
+        System.out.println("Average: " + average/30.0);
+        System.out.println("Best: " + best);
+
+        System.out.println();
+
+        seed = 1;
+        average = 0.0;
+        best = Double.MAX_VALUE;
+
+        for (int i = 0; i < 30; i++)
+        {
+            spshh = new MultiPointSearchHyperHeuristic(seed++, 30, 5, 0.3);
+            problem = new BinPacking(seed++);
+            problem.loadInstance(7);
+            spshh.setTimeLimit(600000);
+            spshh.loadProblemDomain(problem);
+            spshh.run();
+            double current = spshh.getBestSolutionValue();
+            average += current;
+            if (current < best)
+            {
+                best = current;
+            }
+            System.out.println(spshh.getBestSolutionValue());
+        }
+        System.out.println("Average: " + average/30.0);
+        System.out.println("Best: " + best);
+
+        System.out.println();
+
+        seed = 1;
+        average = 0.0;
+        best = Double.MAX_VALUE;
+
+        for (int i = 0; i < 30; i++)
+        {
+            spshh = new MultiPointSearchHyperHeuristic(seed++, 30, 5, 0.3);
+            problem = new FlowShop(seed++);
+            problem.loadInstance(1);
+            spshh.setTimeLimit(600000);
+            spshh.loadProblemDomain(problem);
+            spshh.run();
+            double current = spshh.getBestSolutionValue();
+            average += current;
+            if (current < best)
+            {
+                best = current;
+            }
+            System.out.println(spshh.getBestSolutionValue());
+        }
+        System.out.println("Average: " + average/30.0);
+        System.out.println("Best: " + best);
+
+        System.out.println();
+
+        seed = 1;
+        average = 0.0;
+        best = Double.MAX_VALUE;
+
+        for (int i = 0; i < 30; i++)
+        {
+            spshh = new MultiPointSearchHyperHeuristic(seed++, 30, 5, 0.3);
+            problem = new SAT(seed++);
+            problem.loadInstance(3);
+            spshh.setTimeLimit(600000);
+            spshh.loadProblemDomain(problem);
+            spshh.run();
+            double current = spshh.getBestSolutionValue();
+            average += current;
+            if (current < best)
+            {
+                best = current;
+            }
+            System.out.println(spshh.getBestSolutionValue());
+        }
+        System.out.println("Average: " + average/30.0);
+        System.out.println("Best: " + best);
     }
 }
