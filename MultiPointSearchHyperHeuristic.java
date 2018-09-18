@@ -35,7 +35,7 @@ public class MultiPointSearchHyperHeuristic extends HyperHeuristic
         this.problemDomain = problemDomain;
         heuristics_count = this.problemDomain.getNumberOfHeuristics();
         minChromosomeLength = 3;
-        maxChromosomeLength = 10;
+        maxChromosomeLength = 5;
         this.problemDomain.initialiseSolution(0);
         for (int counter = 0; counter < populationSize; counter++)
         {
@@ -55,7 +55,7 @@ public class MultiPointSearchHyperHeuristic extends HyperHeuristic
 
     public void evolve()
     {
-        while(!hasTimeExpired() && work != 100)
+        while(!hasTimeExpired() && work != 1)
         {
             int parents[] = new int[2];
             selectParents(parents);

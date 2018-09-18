@@ -52,10 +52,10 @@ public class BenchmarkCalculator {
 
 	public static void main (String[] argv) {
 
-		int domains = 6;
-		int number_of_instances = 5;
+		int domains = 4;
+		int number_of_instances = 1;
 
-		File dir = new File("submitted/"); 
+		File dir = new File("/home/vignesh/IdeaProjects/Assignment2COS791/src/selection-perturbative-cross-domain-hyper-heuristic/chesc_benchmark/submitted/");
 		String[] children = dir.list(); 
 		String[] hhnames = null;
 		int hyperheuristics = 0;
@@ -72,7 +72,7 @@ public class BenchmarkCalculator {
 				System.out.println(filename);
 				hhnames[file] = filename.split(".txt")[0];
 				try{
-					FileReader read = new FileReader("submitted/"+filename);
+					FileReader read = new FileReader("/home/vignesh/IdeaProjects/Assignment2COS791/src/selection-perturbative-cross-domain-hyper-heuristic/chesc_benchmark/submitted/"+filename);
 					BufferedReader buff = new BufferedReader(read);
 					for (int l = 0; l < domains; l++) {
 						String s = buff.readLine();
@@ -158,8 +158,9 @@ public class BenchmarkCalculator {
 			case 1: d = "Bin Packing";break;
 			case 2: d = "Personnel Scheduling";break;
 			case 3: d = "Flow Shop";break;
-			case 4: d = "TSP";break;
-			case 5: d = "VRP";break;}
+//			case 4: d = "TSP";break;
+//			case 5: d = "VRP";break;
+			}
 			System.out.println(d);
 			double domaintotal = 0;
 			for (int g = 0; g < domainscores.length; g++) {
